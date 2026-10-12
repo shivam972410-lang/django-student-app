@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="en"><head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sign in · Campus</title>
+  <style>
+    *{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;background:linear-gradient(135deg,#eef2ff,#f7f9fc 60%,#e8f2ff);font:15px system-ui,-apple-system,"Segoe UI",sans-serif;color:#172b4d;padding:20px}.card{width:min(420px,100%);background:#fff;padding:38px;border:1px solid #e5eaf1;border-radius:18px;box-shadow:0 18px 60px #23345a12}.brand{font-size:19px;font-weight:750;color:#3457d5}.card h1{font-size:27px;letter-spacing:-.7px;margin:26px 0 6px}.intro{color:#718096;margin:0 0 24px}.field{margin:16px 0}.field label{display:block;font-size:13px;font-weight:650;margin-bottom:7px}.field input{width:100%;padding:12px;border:1px solid #dce3ed;border-radius:9px;font:inherit}.field input:focus{outline:3px solid #3457d522;border-color:#3457d5}.error{color:#b42332;font-size:13px;margin:6px 0}.alert{background:#fff0f0;color:#a52938;border-radius:8px;padding:11px 13px;margin:14px 0;font-size:14px}.submit{width:100%;padding:12px;border:0;border-radius:9px;background:#3457d5;color:#fff;font:inherit;font-weight:700;cursor:pointer;margin-top:8px}.help{font-size:12px;color:#718096;margin-top:22px;line-height:1.6}
+  </style>
+</head><body><main class="card">
+  <div class="brand">● Campus</div><h1>Welcome back</h1><p class="intro">Sign in to manage the student directory.</p>
+  {% if form.non_field_errors %}<div class="alert" role="alert">{{ form.non_field_errors }}</div>{% endif %}
+  {% if next %}<div class="alert" role="status">Please sign in to continue.</div>{% endif %}
+  <form method="post">{% csrf_token %}
+    {% for field in form %}<div class="field">{{ field.label_tag }}{{ field }}{% for error in field.errors %}<div class="error">{{ error }}</div>{% endfor %}</div>{% endfor %}
+    <button class="submit" type="submit">Sign in</button>
+  </form><p class="help">Use your existing staff or administrator account. Accounts are managed by your site administrator.</p>
+</main></body></html>

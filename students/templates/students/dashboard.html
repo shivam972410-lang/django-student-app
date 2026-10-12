@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Students · Campus</title>
+  <style>
+    :root{--ink:#172b4d;--muted:#718096;--line:#e5eaf1;--blue:#3457d5;--bg:#f5f7fb}
+    *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+    header{height:72px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 max(24px,calc((100% - 1160px)/2))}
+    .brand{font-size:19px;font-weight:750;letter-spacing:-.5px}.brand span{color:var(--blue)}.user{display:flex;align-items:center;gap:14px;color:var(--muted)}
+    button,.button{border:0;border-radius:9px;background:var(--blue);color:#fff;padding:11px 16px;font:inherit;font-weight:650;text-decoration:none;cursor:pointer}.logout{background:none;color:#52627a;padding:8px}
+    main{max-width:1160px;margin:44px auto;padding:0 24px}.heading{display:flex;justify-content:space-between;align-items:center;margin-bottom:28px}.heading h1{font-size:30px;letter-spacing:-1px;margin:0 0 5px}.heading p{margin:0;color:var(--muted)}
+    .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-bottom:26px}.card,.panel{background:white;border:1px solid var(--line);border-radius:14px}.card{padding:21px 24px}.label{color:var(--muted);font-size:13px;font-weight:600}.value{font-size:30px;font-weight:750;margin-top:9px;letter-spacing:-1px}
+    .panel{overflow:hidden}.panel-top{padding:20px 22px;display:flex;justify-content:space-between;align-items:center;gap:16px;border-bottom:1px solid var(--line)}.panel h2{font-size:17px;margin:0}.search{display:flex;gap:9px}.search input{width:min(270px,42vw);padding:10px 12px;border:1px solid var(--line);border-radius:8px;font:inherit}.search button{padding:9px 13px}
+    table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:15px 22px;border-bottom:1px solid #edf0f5}th{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.06em}tbody tr:last-child td{border-bottom:0}.name{font-weight:650}.sub{font-size:13px;color:var(--muted);margin-top:3px}.tag{display:inline-block;background:#eef2ff;color:#4257a9;border-radius:999px;padding:5px 10px;font-size:12px;font-weight:650}.actions{display:flex;gap:13px}.actions a{color:var(--blue);font-size:13px;font-weight:650;text-decoration:none}.actions form{display:inline}.actions button{background:none;padding:0;color:#c24150;font-size:13px}
+    .notice{padding:12px 16px;background:#eaf7ef;color:#247344;border-radius:9px;margin-bottom:18px}.empty{text-align:center;padding:54px 20px;color:var(--muted)}.empty strong{display:block;color:var(--ink);margin-bottom:6px}
+    @media(max-width:720px){main{margin:28px auto}.heading{align-items:flex-start;gap:16px;flex-direction:column}.cards{grid-template-columns:1fr;gap:10px}.card{padding:16px 19px}.value{font-size:25px}.panel-top{align-items:flex-start;flex-direction:column}table{min-width:680px}.table-wrap{overflow-x:auto}header{padding:0 20px}.user{gap:6px}}
+  </style>
+</head>
+<body>
+  <header><div class="brand"><span>●</span> Campus</div><div class="user"><span>Hi, {{ username }}</span><form method="post" action="{% url 'logout' %}">{% csrf_token %}<button class="logout" type="submit">Log out</button></form></div></header>
+  <main>
+    {% if messages %}{% for message in messages %}<div class="notice">{{ message }}</div>{% endfor %}{% endif %}
+    <div class="heading"><div><h1>Students</h1><p>Manage your student directory in one place.</p></div><a class="button" href="{% url 'add_student' %}">＋ Add student</a></div>
+    <section class="cards"><div class="card"><div class="label">Total students</div><div class="value">{{ total_students }}</div></div><div class="card"><div class="label">Courses represented</div><div class="value">{{ courses_count }}</div></div><div class="card"><div class="label">Signed in as</div><div class="value" style="font-size:21px;margin-top:15px">{{ username }}</div></div></section>
+    <section class="panel"><div class="panel-top"><h2>Student directory</h2><form class="search" method="get"><input name="q" value="{{ query }}" placeholder="Search students…" aria-label="Search students"><button type="submit">Search</button></form></div>
+      {% if students %}<div class="table-wrap"><table><thead><tr><th>Student</th><th>Course</th><th>Age</th><th>Actions</th></tr></thead><tbody>
+      {% for student in students %}<tr><td><div class="name">{{ student.name }}</div><div class="sub">{{ student.email }}</div></td><td><span class="tag">{{ student.course }}</span></td><td>{{ student.age }}</td><td><div class="actions"><a href="{% url 'edit_student' student.id %}">Edit</a><a style="color:#c24150" href="{% url 'delete_student' student.id %}">Delete</a></div></td></tr>{% endfor %}
+      </tbody></table></div>{% else %}<div class="empty"><strong>{% if query %}No matching students{% else %}No students yet{% endif %}</strong>{% if query %}Try another name, email, or course.{% else %}Add your first student to get started.{% endif %}</div>{% endif %}
+    </section>
+  </main>
+</body></html>
